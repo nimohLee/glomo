@@ -1,9 +1,12 @@
 package com.devleoh.glomo.member.domain;
 
 import com.devleoh.glomo.base.BaseEntity;
+import com.devleoh.glomo.util.SHA256;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.security.NoSuchAlgorithmException;
 
 /**
  * packageName    : com.devleoh.glomo.user.domain
@@ -35,6 +38,9 @@ public class Member extends BaseEntity {
     private String password;
 
     @Column(nullable = false)
+    private String passwordSalt = "";
+
+    @Column(nullable = false)
     private String email;
 
     public Member(String name, String memberId, String password, String email) {
@@ -44,19 +50,25 @@ public class Member extends BaseEntity {
         this.email = email;
     }
 
-    public boolean isSameName(String name) {
+    public boolean isSameName(final String name) {
         return this.name.equals(name);
     }
 
-    public boolean isSameMemberId(String memberId) {
+    public boolean isSameMemberId(final String memberId) {
         return this.memberId.equals(memberId);
     }
 
-    public void changeName(String name) {
+    public void changeName(final String name) {
         this.name = name;
     }
 
-    public void changeMemberId(String memberId) {
+    public void changeMemberId(final String memberId) {
         this.memberId = memberId;
+    }
+
+    public void encryptPassword() throws NoSuchAlgorithmException {
+        String salt = SHA256.createSalt();
+        password = SHA256.encrypt(password, salt);
+        passwordSalt = salt;
     }
 }

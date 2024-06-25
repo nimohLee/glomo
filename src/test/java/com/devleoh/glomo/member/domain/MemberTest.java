@@ -3,6 +3,8 @@ package com.devleoh.glomo.member.domain;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.security.NoSuchAlgorithmException;
+
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -19,15 +21,15 @@ import static org.junit.jupiter.api.Assertions.assertAll;
  */
 public class MemberTest {
 
-    public static final String USERNAME = "username";
-    public static final String USER_ID = "userId";
+    public static final String NAME = "username";
+    public static final String MEMBER_ID = "userId";
     public static final String PASSWORD = "password";
     public static final String EMAIL = "email";
-    private Member user;
+    private Member member;
 
     @BeforeEach
     void setUp() {
-        user = new Member(USERNAME, USER_ID, PASSWORD, EMAIL);
+        member = new Member(NAME, MEMBER_ID, PASSWORD, EMAIL);
     }
 
     @Test
@@ -35,8 +37,8 @@ public class MemberTest {
         final String failName = "failName";
 
         assertAll(
-                () -> assertThat(user.isSameName(USERNAME)).isTrue(),
-                () -> assertThat(user.isSameName(failName)).isFalse()
+                () -> assertThat(member.isSameName(NAME)).isTrue(),
+                () -> assertThat(member.isSameName(failName)).isFalse()
         );
     }
 
@@ -45,8 +47,16 @@ public class MemberTest {
         final String failId = "failId";
 
         assertAll(
-                () -> assertThat(user.isSameMemberId(USER_ID)).isTrue(),
-                () -> assertThat(user.isSameMemberId(failId)).isFalse()
+                () -> assertThat(member.isSameMemberId(MEMBER_ID)).isTrue(),
+                () -> assertThat(member.isSameMemberId(failId)).isFalse()
         );
+    }
+
+    @Test
+    void encryptPassword() throws NoSuchAlgorithmException {
+        String originalPassword = member.getPassword();
+        member.encryptPassword();
+        String encryptedPassword = member.getPassword();
+        assertThat(originalPassword).isNotEqualTo(encryptedPassword);
     }
 }

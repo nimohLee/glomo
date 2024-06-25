@@ -16,11 +16,20 @@ spring:
     activate:
       on-profile: test
   datasource:
-    driver-class-name:
-    url:
-    username:
-    password:
-
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/testdb
+    username: postgres
+    password: password
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  h2:
+    console:
+      enabled: true
 ---
 spring:
   config:
